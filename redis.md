@@ -9,7 +9,7 @@
 
 - 技术发展是Map，B树，bitmap（准确的），Linear Counting，LogLog Counting，HyperLogLog Counting（不准确的，基于概率的，但是能记录的多）
 
-- 不准确的算法都是哈希+概率，一个比一个NB，精妙
+- 不准确的算法都是哈希+概率，一个比一个NB，精妙。但是算法/数学都不深究，大概了解是啥，用到了再学就赶趟。
 
 - Redis自带HyperLogLog Counting，操作如下：
 
