@@ -21,7 +21,7 @@
       int i = p;
       int j = p + 1;
       for (; j <= q; j++) {
-          if (arr[j] < arr[i]) {
+          if (arr[j] < arr[p]) {
               i++;
               swap(arr[i], arr[j]);
           }
