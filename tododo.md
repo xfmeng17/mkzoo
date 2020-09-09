@@ -5,7 +5,7 @@
 1. ObjectPool 使用，复用fd
 2. PB 反射及PB相关：https://izualzhy.cn/protobuf-message-reflection
 3. trpc 请求decode失败后直接跳到encode rsp，为啥
-4. 
+4. golang 规则表达式，能否C++？https://github.com/Knetic/govaluate
 
 ### 2020-08
 
