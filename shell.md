@@ -2,7 +2,19 @@
 
 # 常用Shell脚本示例
 
-### Sleep，定时echo
+### #*/和%/
+
+> https://blog.csdn.net/weixin_33699914/article/details/92900047?utm_medium=distribute.pc_relevant.none-task-blog-title-2&spm=1001.2101.3001.4242
+
+${string#substring}Strip shortest match of $substring from front of $string
+
+${string%substring}Strip shortest match of $substring from back of $string
+
+#*/ 代表删除从前往后最小匹配的内容，\*统配字符，XXXX/
+
+%/* 代表删除从后往前最小匹配的内容, /XXXXX
+
+### while
 
 ```shell
 #! /bin/bash
@@ -18,7 +30,7 @@ do
 done
 ```
 
-### Case
+### case
 
 ```shell
 #!/bin/bash
@@ -45,9 +57,7 @@ function flame_graph()
 MESSAGE=`date +"%Y-%m-%d %T"`
 ```
 
-
-
-#### 批量rename文件名
+### rename
 
 v 显示文件重命名的细节
 
