@@ -74,5 +74,19 @@ rename -v 's/.txt/.log/' *.txt
 
 
 
+# 日常处理命令Mark
 
+- ```shell
+  grep -w "port:" -ir /usr/local/trpc/bin/trpc_cpp.yaml | tail -1 | awk '{print $2}'
+  ```
+
+- ```shell
+  ip route show | grep src | awk '{print $NF}'
+  ```
+
+- ```shell
+  sudo ./packetbeat -c trpc.yml -E packetbeat.protocols.0.host=9.146.135.136 -E  packetbeat.protocols.0.port=11065  -E packetbeat.protocols.0.target_service=9.138.150.159:11074
+  ```
+
+- 
 
