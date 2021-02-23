@@ -4,13 +4,13 @@
 
 - tododo是我觉得有空了要学的东西
 - marked是日常总结，bug记录，听到的技术等
-
 - c++11是一些c++11使用的点
 - shell是一些shell脚本的示例代码
 - redis是redis面试相关
 - clrs是复习算法导论网易公开课的笔记
 - apue是学习apue的笔记
 - muduo是学习muduo库的笔记
+- reading是觉得好的技术文章
 
 ------
 
