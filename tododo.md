@@ -23,3 +23,17 @@
 
 1. 递归mutex的实现https://blog.csdn.net/mcc12356/article/details/106947074
 
+2. [Lock Free中的Hazard Pointer](http://www.yebangyu.org/blog/2015/12/10/introduction-to-hazard-pointer/)
+
+3. [实现无锁的栈与队列(5)：Hazard Pointer](https://www.cnblogs.com/catch/p/5129586.html)
+
+4. 内部小哥**carelye**的无锁hashmap
+
+5. [分布式存储系统设计（3）—— 存储结构](https://www.cnblogs.com/glacierh/p/5689418.html)
+
+6. [多阶Hash算法](https://www.owenzhang.net/blog/330.html)
+
+7. [Hazard pointer](https://en.wikipedia.org/wiki/Hazard_pointer)
+
+   
+

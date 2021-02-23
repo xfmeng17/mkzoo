@@ -4,7 +4,9 @@
 
 > https://www.linuxidc.com/Linux/2016-12/137936.htm
 
-![kfifo](https://github.com/xfmeng17/mkzoo/blob/master/picture/2021_02/kfifo2.jpg)
+![kfifo](https://github.com/xfmeng17/mkzoo/blob/master/picture/2021_02/kfifo.jpg?raw=true)
+
+------
 
 ### 2021-01-06 从gettimeofday到内存屏障
 
@@ -32,6 +34,134 @@
 
 1. `sar -n DEV 1 3` 查看网卡，参数意义：https://blog.51cto.com/461205160/1939549
 2. 查看每个软中断类型的中断次数的变化速率：`watch -d cat /proc/softirqs`
+
+------
+
+#### 2020-11-02 关于pb Utf8DebugString()打印\345\245\207引发的一些系列
+
+1. 接入联调PB，发现Utf8DebugString() 打印bytes输出了这种 `\345\245\207\345\245\207\346\200\252\346\200\252\347\232\204`，十分疑惑
+
+2. 首先不知都\345是啥，研究了下，`\`开头都是转义字符，`\ddd`是3位8进制，`\xhh`是2位16进制
+
+   - [C\C++的转义字符](https://www.cnblogs.com/emanlee/archive/2010/05/14/1735274.html)
+
+   - [C语言转义字符](http://c.biancheng.net/cpp/html/2890.html)
+
+3. 那上面到底是啥中文？所以搞了个python程序：https://github.com/xfmeng17/tempwork/blob/master/python/decode8.py
+
+4. 讲道理，`Utf8DebugString()`应该能识别啊？一看，pb类型是bytes，print的时候直接打印3位8进制，用`DebugString()`还是`Utf8DebugString()`没区别
+
+5. 然后找了半天没找到直接把3位8进制UTF8转成中文的，自己想写个C++，发现，如果定义在代码内部，直接按转义字符，就是中文，如果重终端输入，就是**纯字符**，参见：https://github.com/xfmeng17/tempwork/blob/master/cpp/protobuf/utf8/utf8.cc
+
+6. 还是需要仔细研究一下PB里面这个函数：
+
+   1. https://sourcegraph.com/github.com/Samsung/TizenRT/-/blob/external/protobuf/src/google/protobuf/stubs/strutil.cc#L592
+   2. https://www.fpstop.com/third/protobuf_string/
+
+7. 03，继续读pb源码，发现`Utf8DebugString`和`DebugString`差别在于前者调用了
+
+   - `TextFormat::Printer::SetUseUtf8StringEscaping(true)`
+   - `class FastFaildValuePrinterUtf8Escaping`
+   - `PrintString`
+   - `Utf8SafeCEscape`
+   - `CEscapeInternal` => 二级制到 \ddd 的形式，最大 字符串大小会扩 4倍
+
+   但是，**目前存疑** 不应该是 `DebugString` 做二进制到 \ddd形式的转化，而`Utf8DebugString`直接打印二进制吗？？
+
+------
+
+#### [2020-10-27 什么是代码区、常量区、静态区（全局区）、堆区、栈区？](https://blog.csdn.net/u014470361/article/details/79297601)
+
+1. 从低地址到高地址依次为：
+
+   1. 代码区：存放代码，也即是CPU指令，只读
+
+   2. 常量区：程序内部的常量，如 `int a = 100; string s = "hello"` 里面的100，hello，就是常量 
+
+   3. 静态区（全局区）：静态变量和全局变量在一起，只初始化一次，程序全部结束后才释放
+
+      - 静态变量，就是main或者其他函数内带static的变量
+
+        - 全局变量，就是main外面的
+
+   4. 堆区（向高地址扩展）
+
+   5. 栈区（向低地址扩展）其实堆栈区中间是动态链接库区，用于在程序运行期间加载和卸载动态链接库
+
+2. https://github.com/xfmeng17/tempwork/blob/master/c/test_char_arr.c 说明下为啥char * core char[] 不core？
+
+   - char * 指向一个常量区，修改常量 segment fault
+   - char[] str 定义了一个字符数组，在栈区，char[] str = "abcd"，是将常量区的"abcd"拷贝到str对应的地址空间中
+
+3. C语言的static修饰符，令人迷惑：https://blog.csdn.net/qq_37858386/article/details/79064900
+
+   	- 除一个例外，static就是作用域
+   	- 这个例外就是，函数内部（main或者其他自定义函数）带static的，就不是作用域了（因为函数自带作用域，而是叫静态变量，静态变量就是带作用域的“全局变量”
+
+4. 再复习下C程序的内存布局：http://c.biancheng.net/cpp/html/3180.html
+
+------
+
+#### [2020-06-10 引用在本质上是什么，它和指针到底有什么区别](http://c.biancheng.net/cpp/biancheng/view/3261.html)
+
+- 引用只是对指针的封装，底层还是指针。对引用取地址，并不是这个引用的地址，而是引用所对应的变量的地址，但是并不是说引用自己不暂用空间，而是编辑器内部进行了转换，不让我们看到引用的地址。
+
+- 那为什么会有引用这个东西呢，原因是设计语言的人觉得用指针写代码麻烦，有不能直接拷贝对象，就搞了个引用
+
+- 这里也清晰了，既然底层是指针，那就只能指想在内存上的数据。对于临时变量（1，2，3）这种在寄存器上的，就不能引用。无法“声明”一个引用，因为他内部其实是一个指针！
+
+- 那什么东东不放在内存上，或者更精确的说，是不能寻址呢？有2个：
+
+  - 临时数据（基本类型的，如int），下面的是错的，但是func()返回结构体就是对的
+
+    ```c++
+    int n = 100, m = 200;
+    int *p1 = &(m + n);    //m + n 的结果为 300
+    int *p2 = &(n + 100);  //n + 100 的结果为 200
+    bool *p4 = &(m < n);   //m < n 的结果为 false
+    
+    /********************/
+    
+    int func() {
+        int n = 100;
+        return n;
+    }
+    int *p = &(func());
+    ```
+
+  - 常量（或者是常量表达式）：常量和常量表达式会被认为是立即数，会被硬编码到指令中，虽然指令（即代码）也是加载到内存，但是是不能对他们进行内存寻址的
+
+- 如果引用作为函数参数，那么调用函数传值时，如果传了一个常量或者常量表达式，就会遇到左值右值的报错了，如下：
+
+  ```c++
+  bool isOdd(int &n) {
+      if(n/2 == 0){
+          return false;
+      }else{
+          return true;
+      }
+  }
+  int main() {
+      int a = 100;
+      isOdd(a);  //正确
+      isOdd(a + 9);  //错误
+      isOdd(27);  //错误
+      isOdd(23 + 55);  //错误
+      return 0;
+  }
+  ```
+
+  编译tempwork/cpp/test下的ref.cpp，显示的错误：
+
+  ```shell
+  ref.cc: In function ‘int main()’:
+  ref.cc:10:28: error: cannot bind non-const lvalue reference of type ‘double&’ to an rvalue of type ‘double’
+    double v1 = volume(a, b, c);
+  ```
+
+  哈哈哈，左值右值，这不就清楚了嘛~~
+
+- 右值引用 https://juejin.im/post/59c3932d6fb9a00a4b0c4f5b
 
 ------
 
