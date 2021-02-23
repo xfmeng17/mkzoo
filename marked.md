@@ -4,7 +4,7 @@
 
 > https://www.linuxidc.com/Linux/2016-12/137936.htm
 
-![kfifo](https://github.com/xfmeng17/mkzoo/blob/master/picture/2021_02/kfifo.jpg)
+![kfifo](https://github.com/xfmeng17/mkzoo/blob/master/picture/2021_02/kfifo2.jpg)
 
 ### 2021-01-06 从gettimeofday到内存屏障
 
