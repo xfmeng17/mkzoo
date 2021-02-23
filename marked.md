@@ -1,12 +1,12 @@
 # 日常一些知识，遇到的BUG，听到的技术等记录
 
-### 2021-02-23
+### 2021-02-23 KFIFO再理解
 
-关于KFIFO：https://www.linuxidc.com/Linux/2016-12/137936.htm
+> https://www.linuxidc.com/Linux/2016-12/137936.htm
 
-![kfifo](C:\Users\edwinxfmeng\Desktop\kfifo.jpg)
+![kfifo](https://github.com/xfmeng17/mkzoo/blob/master/picture/2021_02/kfifo.jpg)
 
-### 2021-01-06
+### 2021-01-06 从gettimeofday到内存屏障
 
 起因是，使用gettimeofday()减去trpc::context->GetRecvTimestamp()属性上报溢出（已解决，存在uint64_t溢出问题）
 
