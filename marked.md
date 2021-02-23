@@ -1,6 +1,12 @@
 # 日常一些知识，遇到的BUG，听到的技术等记录
 
-### 2020-01-06
+### 2021-02-23
+
+关于KFIFO：https://www.linuxidc.com/Linux/2016-12/137936.htm
+
+![kfifo](C:\Users\edwinxfmeng\Desktop\kfifo.jpg)
+
+### 2021-01-06
 
 起因是，使用gettimeofday()减去trpc::context->GetRecvTimestamp()属性上报溢出（已解决，存在uint64_t溢出问题）
 
@@ -22,6 +28,11 @@
 
 7. 还没看 https://github.com/apache/incubator-brpc/blob/master/docs/cn/atomic_instructions.md
 
+补充:
+
+1. `sar -n DEV 1 3` 查看网卡，参数意义：https://blog.51cto.com/461205160/1939549
+2. 查看每个软中断类型的中断次数的变化速率：`watch -d cat /proc/softirqs`
+
 ------
 
 ### Q：为什么Rpckit框架下产生的core文件，有时候是进程名，有时候是一个rc_thw_xxx的名字？
@@ -35,7 +46,7 @@
 
 - https://www.cnblogs.com/se7end/p/12704976.html
 
-### Q：
+
 
 
 
