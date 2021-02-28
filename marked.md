@@ -1,5 +1,16 @@
 # 日常一些知识，遇到的BUG，听到的技术等记录
 
+### 2021-02-28 HazardPointer初理解
+
+目前知道hazard pointer试图解决的问题，但还是没有完全理解hazard pointer的实现细节，可能需要下一次继续理解了，这里先mark住相关的文章
+
+- [无锁实现之Hazard Pointer (to be continue)](https://www.jianshu.com/p/b5cc79caa9a5)
+- [Lock Free中的Hazard Pointer(上)](http://www.yebangyu.org/blog/2015/12/10/introduction-to-hazard-pointer/)
+- [Hazard指针](https://blog.csdn.net/pongba/article/details/589864)
+- [Lock-free 编程：A Case Study（下）](http://kaiyuan.me/2018/02/07/lock-free-prog2/)
+- http://blog.kongfy.com/2017/02/hazard-pointer/
+- 
+
 ### 2021-02-23 KFIFO再理解
 
 > https://www.linuxidc.com/Linux/2016-12/137936.htm
